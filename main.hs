@@ -190,3 +190,38 @@ derecha palabra = [vlast palabra] ++ vinit palabra
 desplaza f x palabra 
  | x == 0 = palabra
  |otherwise = desplaza f (x-1) (f palabra)
+
+listaDuplas f [] = []
+listaDuplas f (x:xs) = (f x, x) : listaDuplas f xs
+
+
+
+-- Ejercicio 4.3
+
+
+-- Ejercicio en clase ordenarCon
+
+ordenarCon _ [] = []
+ordenarCon f (x:xs) = pre ++ [x] ++ pos
+  where 
+    pre = ordenarCon f (filter (not . f x) xs)
+    pos = ordenarCon f (filter (f x) xs)
+
+
+filterCoolRecur _ [] = ([],[])
+filterCoolRecur f (x:xs)
+  | f x = (x : si, no)
+  | otherwise = (si, x : no)
+  where
+  (si, no) = filterCool f xs
+
+
+filterCool f lista = ([x | x <- lista, f x],[x | x <- lista, not . f $ x])
+
+filterCoolFold f = foldr h ([],[])
+  where 
+  h x (si, no)
+    | f x = (x:si, no)
+    | otherwise = (si, x:no) 
+
+filterCoolFold' f = foldr (\x (si,no) -> if f x then (x:si,no) else (si,x:no)) ([],[])
